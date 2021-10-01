@@ -7,10 +7,39 @@
     border-radius: 10px;
     padding: 18px;
     box-sizing: border-box;
-  }
+    position: relative;
+    top: -25px;
+    left: 10px;
 
-  .button {
-    margin-top: 15px;
-    width: 100%;
+    .button {
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    &-close-btn {
+      position: absolute;
+      right: -5px;
+      top: -5px;
+      cursor: pointer;
+    }
+
+    &-colors {
+      width: 100%;
+      display: inline-flex;
+      justify-content: space-between;
+      margin-top: 15px;
+
+      .badge {
+        width: 16px;
+        height: 16px;
+        margin-right: 3px;
+        cursor: pointer;
+        border: 2px solid transparent;
+
+        &.active {
+          border: 2px solid #525252;
+        }
+      }
+    }
   }
 }

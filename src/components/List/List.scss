@@ -1,6 +1,14 @@
 .list {
   margin-bottom: 30px;
 
+  &__add-button {
+    opacity: 0.4;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   li {
     display: flex;
     align-items: center;

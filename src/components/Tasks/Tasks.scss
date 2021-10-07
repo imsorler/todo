@@ -25,8 +25,52 @@
     }
   }
 
+  &__form {
+    margin-top: 16px;
+
+    img {
+      opacity: 1;
+      margin: 0;
+      margin-left: 2px;
+    }
+
+    &-block {
+      .button {
+        margin-right: 10px;
+        margin-top: 15px;
+      }
+    }
+
+    &-new {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      opacity: 0.4;
+      transition: opacity 0.15 ease-in-out;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      span {
+        font-size: 16px;
+        margin-left: 20px;
+      }
+    }
+  }
+
   &__items {
     margin-top: 30px;
+
+    h2 {
+      font-family: 'Montserrat';
+      font-weight: bold;
+      font-size: 20px;
+      color: #c9d1d3;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+    }
 
     &-row {
       display: flex;

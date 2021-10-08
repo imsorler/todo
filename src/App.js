@@ -25,7 +25,13 @@ function App() {
   };
 
   const onAddTask = (listId, taskObj) => {
-    console.log(listId, taskObj);
+    const newList = lists.map((item) => {
+      if (item.id === listId) {
+        item.tasks = [...item.tasks, taskObj];
+      }
+      return item;
+    });
+    setLists(newList);
   };
 
   const onEditListTitle = (id, title) => {
@@ -44,6 +50,7 @@ function App() {
         <List
           items={[
             {
+              active: true,
               icon: (
                 <svg
                   width='14'

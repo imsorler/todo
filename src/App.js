@@ -46,7 +46,7 @@ function App() {
       });
       setLists(newList);
       axios.delete('http://localhost:5000/tasks/' + taskId).catch(() => {
-        alert('Не удалось удалить задачу');
+        alert('Задача не была удалена');
       });
     }
   };

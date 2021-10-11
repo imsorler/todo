@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Route, useHistory } from 'react-router-dom';
 
 import { List, AddList, Tasks } from './components';
 
@@ -9,6 +10,7 @@ function App() {
   const [lists, setLists] = useState(null);
   const [colors, setColors] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
+  let history = useHistory();
 
   useEffect(() => {
     axios.get('http://localhost:5000/lists?_expand=color&_embed=tasks').then(({ data }) => {
@@ -25,7 +27,52 @@ function App() {
   };
 
   const onAddTask = (listId, taskObj) => {
-    console.log(listId, taskObj);
+    const newList = lists.map((item) => {
+      if (item.id === listId) {
+        item.tasks = [...item.tasks, taskObj];
+      }
+      return item;
+    });
+    setLists(newList);
+  };
+
+  const onRemoveTask = (listId, taskId) => {
+    if (window.confirm('Вы действительно хотите удалить задачу?')) {
+      const newList = lists.map((item) => {
+        if (item.id === listId) {
+          item.tasks = item.tasks.filter((task) => task.id !== taskId);
+        }
+        return item;
+      });
+      setLists(newList);
+      axios.delete('http://localhost:5000/tasks/' + taskId).catch(() => {
+        alert('Задача не была удалена');
+      });
+    }
+  };
+
+  const onEditTask = (listId, taskObj) => {
+    const newTaskText = window.prompt('Текст задачи', taskObj.text);
+
+    if (!newTaskText) {
+      return;
+    }
+
+    const newList = lists.map((list) => {
+      if (list.id === listId) {
+        list.tasks = list.tasks.map((task) => {
+          if (task.id === taskObj.id) {
+            task.text = newTaskText;
+          }
+          return task;
+        });
+      }
+      return list;
+    });
+    setLists(newList);
+    axios.patch('http://localhost:5000/tasks/' + taskObj.id, { text: newTaskText }).catch(() => {
+      alert('Не удалось удалить задачу');
+    });
   };
 
   const onEditListTitle = (id, title) => {
@@ -38,12 +85,22 @@ function App() {
     setLists(newList);
   };
 
+  useEffect(() => {
+    const listId = history.location.pathname.split(`lists/`)[1];
+    if (lists) {
+      const list = lists.find((list) => list.id === Number(listId));
+      setActiveItem(list);
+    }
+  }, [lists, history.location.pathname]);
+
   return (
     <div className='todo'>
       <div className='todo__sidebar'>
         <List
+          onClickItem={(list) => history.push(`/`)}
           items={[
             {
+              active: true,
               icon: (
                 <svg
                   width='14'
@@ -63,13 +120,15 @@ function App() {
         />
         {lists ? (
           <List
+            key={lists.id}
             items={lists}
+            key={lists.id}
             onRemove={(id) => {
               const newLists = lists.filter((item) => item.id !== id);
               setLists(newLists);
             }}
             isRemovable
-            onClickItem={(item) => setActiveItem(item)}
+            onClickItem={(list) => history.push(`/lists/${list.id}`)}
             activeItem={activeItem}
           />
         ) : (
@@ -78,9 +137,29 @@ function App() {
         <AddList onAdd={onAddList} colors={colors} />
       </div>
       <div className='todo__tasks'>
-        {lists && activeItem && (
-          <Tasks onAddTask={onAddTask} list={activeItem} onEditTitle={onEditListTitle} />
-        )}
+        <Route exact path='/'>
+          {lists &&
+            lists.map((list) => (
+              <Tasks
+                key={list.id}
+                onAddTask={onAddTask}
+                list={list}
+                onEditTitle={onEditListTitle}
+                withoutEmpty
+              />
+            ))}
+        </Route>
+        <Route path='/lists/:id'>
+          {lists && activeItem && (
+            <Tasks
+              onAddTask={onAddTask}
+              list={activeItem}
+              onEditTitle={onEditListTitle}
+              onRemoveTask={onRemoveTask}
+              onEditTask={onEditTask}
+            />
+          )}
+        </Route>
       </div>
     </div>
   );

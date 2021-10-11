@@ -57,12 +57,6 @@
       "completed": false
     },
     {
-      "listId": 1,
-      "text": "123",
-      "completed": false,
-      "id": 9
-    },
-    {
       "listId": 4,
       "text": "Купить 1984!",
       "completed": true,
@@ -73,12 +67,6 @@
       "text": "test",
       "completed": false,
       "id": 11
-    },
-    {
-      "listId": 1,
-      "text": "asdasd",
-      "completed": false,
-      "id": 12
     }
   ],
   "colors": [

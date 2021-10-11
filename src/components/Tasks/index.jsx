@@ -36,7 +36,7 @@ const Tasks = ({ list, onEditTitle, onAddTask, onRemoveTask, onEditTask, without
         {list.tasks.map((task) => (
           <Task key={task.id} task={task} list={list} onEdit={onEditTask} onRemove={onRemoveTask} />
         ))}
-        <AddTasksForm list={list} onAddTask={onAddTask} />
+        <AddTasksForm key={list.id} list={list} onAddTask={onAddTask} />
       </div>
     </div>
   );
